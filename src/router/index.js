@@ -12,10 +12,28 @@ const routes = [
     component: () => import('../views/Login.vue'),
   },
   {
-    path: '/lists/:list',
+    path: '/lists',
     name: 'Lists',
     component: () => import('../views/Lists.vue'),
     props: true,
+    children: [
+      {
+        path: 'add',
+        component: () => import('../components/Add.vue'),
+      },
+      {
+        path: 'find',
+        component: () => import('../components/Find.vue'),
+      },
+      {
+        path: 'set',
+        component: () => import('../components/Set.vue'),
+      },
+      {
+        path: 'user',
+        component: () => import('../components/User.vue'),
+      },
+    ],
   },
 ]
 
