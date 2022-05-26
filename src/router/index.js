@@ -33,6 +33,10 @@ const routes = [
         path: 'user',
         component: () => import('../components/User.vue'),
       },
+      {
+        path: 'empty',
+        component: () => import('../components/Empty.vue'),
+      },
     ],
   },
 ]

@@ -7,7 +7,11 @@ export default {
     }),
 
     created(){
-        this.$router.replace({ path: '/login' })
+        if(localStorage.getItem("login_token")){
+            this.$router.replace({ path: '/lists/add' })
+        }else{
+            this.$router.replace({ path: '/login' })
+        }
     },
     
     methods: {
