@@ -37,13 +37,15 @@ export default {
     }),
 
     async created() {
+        if (!localStorage.getItem("login_token")) return false
+        
         const roles = await axios({
             url: "//enroll.immers.icu/api/roles",
             method: "post",
             headers: {
                 token: this.token,
             },
-        });
+        })
 
         if (roles.data.status_code == 200) {
             this.roles = roles.data.data;
@@ -57,12 +59,12 @@ export default {
             headers: {
                 token: this.token,
             },
-        });
+        })
 
         if (userLists.data.status_code == 200) {
             userLists.data.data.forEach((data) => {
                 data.state = Boolean(data.state);
-            });
+            })
             this.lists = userLists.data.data;
             this.tableLoad = false;
         }
@@ -87,7 +89,7 @@ export default {
 
         State(val, id) {
             axios({
-                url: "//enroll.immers.icu/api/state",
+                url: "//enroll.immers.icu/api/user-state",
                 method: "post",
                 headers: {
                     token: this.token,
@@ -169,7 +171,7 @@ export default {
                     this.$router.replace({
                         path: "/lists/empty",
                         query: { url: this.$route.path },
-                    });
+                    })
                 } else {
                     ElMessage({
                         message: "删除失败 请重试",

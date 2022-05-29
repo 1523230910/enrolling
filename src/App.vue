@@ -57,4 +57,7 @@ a {
   color: var(--el-color-info-light-5);
   line-height: var(--el-footer-height);
 }
+.el-message .el-message__badge{
+    display: none;
+}
 </style>

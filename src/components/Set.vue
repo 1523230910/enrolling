@@ -13,16 +13,21 @@ export default {
         },
         addLoad: false,
         major: '',
+        majorDisabled: false,
         majorLoad: false,
+        five: false,
         majors: JSON.parse(localStorage.getItem('major')),
         props: {
             value: 'id',
             label: 'name',
             children: 'major',
+            disabled: false,
         },
     }),
 
     created() {
+        if (!localStorage.getItem("login_token")) return false
+
         axios({
             url: "//enroll.immers.icu/api/majors",
             method: "post",
@@ -30,9 +35,13 @@ export default {
                 token: this.token,
             },
         }).then(res => {
-            if (res.data.status_code == 200) {
+            if (!this.add.majors || JSON.stringify(res.data.data) !== JSON.stringify(this.add.majors)) {
                 this.add.majors = res.data.data
                 localStorage.setItem('majors', JSON.stringify(res.data.data))
+                ElMessage({
+                    message: "数据更新",
+                    type: "success",
+                })
             }
         })
 
@@ -43,9 +52,16 @@ export default {
                 token: this.token,
             },
         }).then(res => {
-            this.majors = res.data.data
-            localStorage.setItem('major', JSON.stringify(res.data.data))
+            if (!this.majors || JSON.stringify(res.data.data) !== JSON.stringify(this.majors)) {
+                this.majors = res.data.data
+                localStorage.setItem('major', JSON.stringify(res.data.data))
+                ElMessage({
+                    message: "数据更新",
+                    type: "success",
+                })
+            }
         })
+        
     },
 
     methods: {
@@ -79,7 +95,7 @@ export default {
                 url: "//enroll.immers.icu/api/delete-major",
                 method: "post",
                 data: {
-                    major: this.major[1],
+                    major: this.major
                 },
                 headers: {
                     token: this.token,
@@ -96,7 +112,7 @@ export default {
                     })
                 } else {
                     ElMessage({
-                        message: "删除失败 请重试",
+                        message: res.data.message,
                         type: "error",
                     })
                     this.majorLoad = false
@@ -141,12 +157,68 @@ export default {
                         path: "/lists/empty",
                         query: { url: this.$route.path },
                     })
+                }
+                this.addLoad = false
+            })
+        },
+
+        Major() {
+            let one = this.majors.findIndex(res => res.id == this.major[0])
+            let two = this.majors[one].major.findIndex(res => res.id == this.major[1])
+            this.majorDisabled= Boolean(this.majors[one].major[two].disabled)
+            this.five= Boolean(this.majors[one].major[two].five)
+        },
+
+        MajorDisabled(val) {
+            if(!this.major[1]) return false
+            axios({
+                url: '//enroll.immers.icu/api/major-disabled',
+                method: 'post',
+                headers: {
+                    token: this.token
+                },
+                data: {
+                    id: this.major[1],
+                    disabled: val
+                }
+            }).then(res => {
+                if (res.data.status_code == 200) {
+                    ElMessage({
+                        message: "修改成功",
+                        type: "success",
+                    })
                 } else {
                     ElMessage({
-                        message: "专业已存在",
+                        message: "修改失败 请重试",
                         type: "error",
                     })
-                    this.addLoad = false
+                }
+            })
+        },
+
+        MajorFive(val){
+            if(!this.major[1]) return false
+            axios({
+                url: '//enroll.immers.icu/api/major-five',
+                method: 'post',
+                headers: {
+                    token: this.token
+                },
+                data: {
+                    id: this.major[1],
+                    five: val
+                }
+            }).then(res => {
+                if (res.data.status_code == 200) {
+                    ElMessage({
+                        message: "修改成功",
+                        type: "success",
+                    })
+                } else {
+                    ElMessage({
+                        message: "修改失败 请重试",
+                        type: "error",
+                    })
                 }
             })
         }
@@ -155,15 +227,24 @@ export default {
 </script>
 
 <template>
-    <el-descriptions title="专业设置" direction="vertical" :column="5" border>
+    <el-descriptions title="专业设置" direction="vertical" :column="7" border>
         <el-descriptions-item label="专业选择">
-            <el-cascader v-model="major" :options="majors" :props="props" placeholder="选择对应专业" />
+            <el-cascader v-model="major" :options="majors" :props="props" placeholder="选择对应专业" @change="Major" />
+        </el-descriptions-item>
+        <el-descriptions-item label="三二分段">
+            <el-radio-group v-model="five" @change="MajorFive">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+            </el-radio-group>
+        </el-descriptions-item>
+        <el-descriptions-item label="禁用">
+            <el-switch v-model="majorDisabled" @change="MajorDisabled" />
         </el-descriptions-item>
         <el-descriptions-item label="操作">
             <el-button @click="Del" type="danger" :disabled="majorLoad">删除</el-button>
         </el-descriptions-item>
         <el-descriptions-item label="专业名称">
-            <el-select v-model="add.major" placeholder="专业分类">
+            <el-select v-model="add.major" placeholder="专业分类" allow-create filterable default-first-option>
                 <el-option v-for="res of add.majors" :key="res.id" :label="res.name" :value="res.id" />
             </el-select>
             <el-input v-model="add.name" placeholder="新专业名称" @keyup.enter="Add"></el-input>
@@ -181,6 +262,7 @@ export default {
 </template>
 
 <style scoped>
+
 .el-descriptions__cell .el-input {
     width: 13rem;
     margin-left: 1rem;

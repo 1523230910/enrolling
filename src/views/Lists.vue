@@ -75,7 +75,7 @@ export default {
     <el-header>
       <router-link to="/">Enrolling</router-link>
       <el-row align="middle" v-show="info">
-        <h2>{{ info.name }}，{{ info.role ? info.role.name : '' }}你好！</h2>
+        <h2>{{ info ? info.name : '' }}，{{ info ? info.role.name : '' }}你好！</h2>
         <el-button @click="Quit">退出</el-button>
       </el-row>
     </el-header>
@@ -105,7 +105,6 @@ export default {
   justify-content: space-between;
   background: var(--el-fill-color-blank);
   position: sticky !important;
-  ;
   top: 60px;
   height: calc(100vh - 60px);
   vertical-align: top;
