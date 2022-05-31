@@ -7,7 +7,7 @@ export default {
         token: localStorage.getItem('login_token'),
         add: {
             majors: JSON.parse(localStorage.getItem('majors')),
-            major: 1,
+            major: '',
             name: '',
             five: false
         },
@@ -165,8 +165,8 @@ export default {
         Major() {
             let one = this.majors.findIndex(res => res.id == this.major[0])
             let two = this.majors[one].major.findIndex(res => res.id == this.major[1])
-            this.majorDisabled= Boolean(this.majors[one].major[two].disabled)
-            this.five= Boolean(this.majors[one].major[two].five)
+            this.majorDisabled= this.majors[one].major[two].disabled
+            this.five= this.majors[one].major[two].five
         },
 
         MajorDisabled(val) {
@@ -266,5 +266,11 @@ export default {
 .el-descriptions__cell .el-input {
     width: 13rem;
     margin-left: 1rem;
+}
+:deep(.el-cascader) {
+    width: 260px;
+}
+.el-select{
+    width: 160px;
 }
 </style>

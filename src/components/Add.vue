@@ -116,8 +116,14 @@ export default {
             })
         },
 
-        async IdLocu(val) {
-            console.log(this.add.idCard)
+        Reset(){
+            this.$refs.form.resetFields()
+        },
+
+        async IdInfo(val) {
+            if (val.length >= 17){
+                val.substr(16, 1) % 2 ? this.add.gender = true : this.add.gender = false
+            }
             if (val.length >= 6 && !this.add.locus) {
                 this.add.locus = true
                 const locus = await axios({
@@ -147,7 +153,6 @@ export default {
         },
 
         VolunteerOne(val) {
-            console.log(val)
             let one = this.majors.findIndex(res => res.id == this.add.volunteerOne[0])
             let two = this.majors[one].major.findIndex(res => res.id == this.add.volunteerOne[1])
             if (this.majors[one].major[two].five) {
@@ -163,12 +168,6 @@ export default {
 
 <template>
     <el-form :model="add" :rules="rules" ref="form" label-position="top" :hide-required-asterisk="true" :inline="true">
-        <el-form-item prop="gender" label="性别" size="large">
-            <el-radio-group v-model="add.gender">
-                <el-radio-button :label="true">男</el-radio-button>
-                <el-radio-button :label="false">女</el-radio-button>
-            </el-radio-group>
-        </el-form-item>
         <el-form-item prop="nature" label="户口性质" size="large">
             <el-radio-group v-model="add.nature">
                 <el-radio-button v-for="(nature, index) of natures" :key="index" :label="nature">{{ nature }}
@@ -187,7 +186,7 @@ export default {
                 <el-radio-button :label="false">否</el-radio-button>
             </el-radio-group>
         </el-form-item>
-        <el-form-item prop="league" label="是否团员">
+        <el-form-item prop="league" label="共青团员">
             <el-radio-group v-model="add.league" size="large">
                 <el-radio-button :label="true">是</el-radio-button>
                 <el-radio-button :label="false">否</el-radio-button>
@@ -206,6 +205,7 @@ export default {
             </el-radio-group>
         </el-form-item>
         <el-form-item label="操作" size="large">
+            <el-button type="warning" @click="Reset" size="large">清除</el-button>
             <el-button type="success" @click="Add" :disabled="addLoad" size="large">录入</el-button>
         </el-form-item>
         <el-form-item prop="id" label="考生号" size="large">
@@ -215,7 +215,7 @@ export default {
             <el-input v-model="add.name" placeholder="本人姓名"></el-input>
         </el-form-item>
         <el-form-item prop="idCard" label="身份证号码" size="large">
-            <el-input v-model="add.idCard" min="18" max="18" @input="IdLocu" placeholder="十八位身份证号码"></el-input>
+            <el-input v-model="add.idCard" min="18" max="18" @input="IdInfo" placeholder="十八位身份证号码"></el-input>
         </el-form-item>
         <el-form-item prop="score" label="成绩" size="large">
             <el-input v-model="add.score" placeholder="总分成绩"></el-input>
