@@ -60,4 +60,16 @@ a {
 .el-message .el-message__badge{
     display: none;
 }
+
+@media screen and (max-width: 768px) {
+  .el-header h2{
+    display: none;
+  }
+  .el-footer{
+    display: none;
+  }
+  .el-container{
+    flex-wrap: wrap;
+  }
+}
 </style>

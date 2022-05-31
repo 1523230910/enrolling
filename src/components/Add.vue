@@ -205,6 +205,9 @@ export default {
                 <el-radio-button :label="false">否</el-radio-button>
             </el-radio-group>
         </el-form-item>
+        <el-form-item label="操作" size="large">
+            <el-button type="success" @click="Add" :disabled="addLoad" size="large">录入</el-button>
+        </el-form-item>
         <el-form-item prop="id" label="考生号" size="large">
             <el-input v-model="add.id" placeholder="统一十四位考生号"></el-input>
         </el-form-item>
@@ -235,7 +238,7 @@ export default {
         <el-form-item prop="parents" label="家长姓名" size="large">
             <el-input v-model="add.parents" placeholder="监护人姓名"></el-input>
         </el-form-item>
-        <el-form-item prop="volunteerOne" label="第一志愿" size="large">
+        <el-form-item prop="volunteerOne" label="第一志愿" label-width="10px" size="large">
             <el-cascader v-model="add.volunteerOne" :options="majors" :props="props" placeholder="选择第一志愿"
                 @change="VolunteerOne" />
         </el-form-item>
@@ -247,9 +250,6 @@ export default {
         </el-form-item>
         <el-form-item label="第四志愿" size="large">
             <el-cascader v-model="add.volunteerFour" :options="majors" :props="props" placeholder="选择第四志愿" clearable />
-        </el-form-item>
-        <el-form-item label="操作" size="large">
-            <el-button type="success" @click="Add" :disabled="addLoad" size="large">录入</el-button>
         </el-form-item>
         <el-form-item prop="remarks" label="备注" style="width: 100%;" size="large">
             <el-input v-model="add.remarks" type="textarea"></el-input>
@@ -276,5 +276,8 @@ export default {
 
 .el-button--large {
     --el-button-size: 42px;
+}
+:deep(.el-cascader) {
+    width: 260.5px;
 }
 </style>

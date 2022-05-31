@@ -62,9 +62,6 @@ export default {
         })
 
         if (userLists.data.status_code == 200) {
-            userLists.data.data.forEach((data) => {
-                data.state = Boolean(data.state);
-            })
             this.lists = userLists.data.data;
             this.tableLoad = false;
         }

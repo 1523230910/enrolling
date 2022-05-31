@@ -114,4 +114,16 @@ export default {
 .el-menu {
   border: none;
 }
+
+@media screen and (max-width: 768px) {
+  .el-aside{
+    position: unset!important;;
+    height: unset;
+    width: 100%;
+    overflow: auto;
+  }
+  .el-menu{
+    display: flex;
+  }
+}
 </style>
