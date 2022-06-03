@@ -1,12 +1,14 @@
+<script setup>
+import { Refresh } from "@element-plus/icons-vue"
+</script>
+
 <script>
 import axios from "axios"
-import { Refresh } from "@element-plus/icons-vue"
 
 export default {
     name: "User",
 
     data: () => ({
-        Refresh,
         token: localStorage.getItem("login_token"),
         lists: [],
         roles: JSON.parse(localStorage.getItem("roles")),
