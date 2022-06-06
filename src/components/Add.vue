@@ -15,7 +15,7 @@ export default {
             school: '',     //毕业学校
             contact: '',    //本人联系电话
             contactOne: '',    //联系电话一
-            contactTWo: '',    //联系电话二
+            contactTwo: '',    //联系电话二
             contacts: '',   //联系人
             tuition: false,     //免学费
             lodge: false,       //内宿
@@ -31,6 +31,7 @@ export default {
             nature: '非农业',     //户口性质
             parents: '',    //家长姓名
             remarks: '',    //备注
+            location: ''
         },
         natures: ['非农业', '农业', '低保'],
         rules: {
@@ -52,8 +53,9 @@ export default {
             five: [{ required: true, type: 'boolean' }],
             nature: [{ required: true }],
             parents: [{ required: true, message: '请输入家长姓名' }, { message: '请输入正确的姓名', pattern: /^[\u4E00-\u9FA5]+$/ }],
+            location: [{ required: true }],
         },
-        props: {
+        majorProps: {
             value: 'id',
             label: 'name',
             children: 'major'
@@ -204,7 +206,7 @@ export default {
                 <el-radio-button :label="false">否</el-radio-button>
             </el-radio-group>
         </el-form-item>
-        <el-form-item label="操作" size="large">
+        <el-form-item lable="操作" size="large">
             <el-button type="warning" @click="Reset" size="large">清除</el-button>
             <el-button type="success" @click="Add" :disabled="addLoad" size="large">录入</el-button>
         </el-form-item>
@@ -238,20 +240,23 @@ export default {
         <el-form-item prop="parents" label="家长姓名" size="large">
             <el-input v-model="add.parents" placeholder="监护人姓名"></el-input>
         </el-form-item>
-        <el-form-item prop="volunteerOne" label="第一志愿" label-width="10px" size="large">
-            <el-cascader v-model="add.volunteerOne" :options="majors" :props="props" placeholder="选择第一志愿"
+        <el-form-item prop="volunteerOne" label="第一志愿" size="large">
+            <el-cascader v-model="add.volunteerOne" :options="majors" :props="majorProps" placeholder="选择第一志愿"
                 @change="VolunteerOne" />
         </el-form-item>
         <el-form-item prop="volunteerTwo" label="第二志愿" size="large">
-            <el-cascader v-model="add.volunteerTwo" :options="majors" :props="props" placeholder="选择第二志愿" />
+            <el-cascader v-model="add.volunteerTwo" :options="majors" :props="majorProps" placeholder="选择第二志愿" />
         </el-form-item>
         <el-form-item label="第三志愿" size="large">
-            <el-cascader v-model="add.volunteerThree" :options="majors" :props="props" placeholder="选择第三志愿" clearable />
+            <el-cascader v-model="add.volunteerThree" :options="majors" :props="majorProps" placeholder="选择第三志愿" clearable />
         </el-form-item>
         <el-form-item label="第四志愿" size="large">
-            <el-cascader v-model="add.volunteerFour" :options="majors" :props="props" placeholder="选择第四志愿" clearable />
+            <el-cascader v-model="add.volunteerFour" :options="majors" :props="majorProps" placeholder="选择第四志愿" clearable />
         </el-form-item>
-        <el-form-item prop="remarks" label="备注" style="width: 100%;" size="large">
+        <el-form-item prop="location" label="户口所在地" size="large" style="width: 100%;">
+            <el-input v-model="add.location" placeholder="填写户口所在地"></el-input>
+        </el-form-item>
+        <el-form-item prop="remarks" label="备注" size="large" style="width: 100%;">
             <el-input v-model="add.remarks" type="textarea"></el-input>
         </el-form-item>
     </el-form>
@@ -280,4 +285,5 @@ export default {
 :deep(.el-cascader) {
     width: 260.5px;
 }
+
 </style>

@@ -45,8 +45,8 @@ export default {
             nature: '',     //户口性质//
             parents: '',    //家长姓名//
             remarks: '',    //备注//
+            location: '',    //备注//
             updated_at: '',
-            enroll: '',
         },
         natures: ['非农业', '农业', '低保'],
         part: 1,
@@ -123,7 +123,17 @@ export default {
                 },
                 data
             }).then(res => {
-                console.log(res)
+                if(res.data.data){
+                    ElMessage({
+                        message: "修改成功",
+                        type: "success",
+                    })
+                }else{
+                    ElMessage({
+                        message: '修改错误',
+                        type: "error",
+                    })
+                }
             })
         },
 
@@ -240,6 +250,14 @@ export default {
             <template #default="scope">
                 <el-cascader v-model="scope.row.volunteerFour" :options="majors" placeholder="无第四志愿" :props="props"
                     clearable />
+            </template>
+        </el-table-column>
+        <el-table-column width="190">
+            <template #header>
+                <el-input placeholder="户口所在地" v-model="find.location" @change="Finds"></el-input>
+            </template>
+            <template #default="scope">
+                <el-input v-model="scope.row.location"></el-input>
             </template>
         </el-table-column>
         <el-table-column width="190">
