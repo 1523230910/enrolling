@@ -31,7 +31,7 @@ export default {
             nature: '非农业',     //户口性质
             parents: '',    //家长姓名
             remarks: '',    //备注
-            location: ''
+            location: ''  //户口所在地
         },
         natures: ['非农业', '农业', '低保'],
         rules: {

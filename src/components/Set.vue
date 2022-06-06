@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios'
+import { exportFile } from "table-xlsx";
 export default {
     naem: 'Set',
 
@@ -23,6 +24,7 @@ export default {
             children: 'major',
             disabled: false,
         },
+        educeLoad: false,
     }),
 
     created() {
@@ -61,7 +63,7 @@ export default {
                 })
             }
         })
-        
+
     },
 
     methods: {
@@ -165,12 +167,12 @@ export default {
         Major() {
             let one = this.majors.findIndex(res => res.id == this.major[0])
             let two = this.majors[one].major.findIndex(res => res.id == this.major[1])
-            this.majorDisabled= this.majors[one].major[two].disabled
-            this.five= this.majors[one].major[two].five
+            this.majorDisabled = this.majors[one].major[two].disabled
+            this.five = this.majors[one].major[two].five
         },
 
         MajorDisabled(val) {
-            if(!this.major[1]) return false
+            if (!this.major[1]) return false
             axios({
                 url: '//enroll.immers.icu/api/major-disabled',
                 method: 'post',
@@ -196,8 +198,8 @@ export default {
             })
         },
 
-        MajorFive(val){
-            if(!this.major[1]) return false
+        MajorFive(val) {
+            if (!this.major[1]) return false
             axios({
                 url: '//enroll.immers.icu/api/major-five',
                 method: 'post',
@@ -220,6 +222,57 @@ export default {
                         type: "error",
                     })
                 }
+            })
+        },
+
+
+        Educe() {
+            this.educeLoad = true
+            axios({
+                url: '//enroll.immers.icu/api/educe',
+                method: 'post',
+                headers: {
+                    token: this.token
+                }
+            }).then(res => {
+                const columns = [
+                    { title: '考生号', dataIndex: 'id' },
+                    { title: '姓名', dataIndex: 'name' },
+                    { title: '性别', dataIndex: 'gender' },
+                    { title: '成绩', dataIndex: 'score' },
+                    { title: '毕业学校', dataIndex: 'school' },
+                    { title: '本人联系电话', dataIndex: 'contact' },
+                    { title: '联系电话一', dataIndex: 'contactOne' },
+                    { title: '联系电话二', dataIndex: 'contactTwo' },
+                    { title: '联系人', dataIndex: 'contacts' },
+                    { title: '免学费', dataIndex: 'tuition' },
+                    { title: '内宿', dataIndex: 'lodge' },
+                    { title: '团员', dataIndex: 'league' },
+                    { title: '户口所在地', dataIndex: 'location' },
+                    { title: '身份证', dataIndex: 'idCard' },
+                    { title: '所在地', dataIndex: 'locus' },
+                    { title: '第一志愿', dataIndex: 'volunteerOne' },
+                    { title: '第二志愿', dataIndex: 'volunteerTwo' },
+                    { title: '第三志愿', dataIndex: 'volunteerThree' },
+                    { title: '第四志愿', dataIndex: 'volunteerFour' },
+                    { title: '调剂', dataIndex: 'regulate' },
+                    { title: '三二分段', dataIndex: 'five' },
+                    { title: '户口性质', dataIndex: 'nature' },
+                    { title: '家长姓名', dataIndex: 'parents' },
+                    { title: '备注', dataIndex: 'remarks' },
+                ]
+                res.data.data.forEach(val => {
+                    val.gender = val.gender ? '男' : '女'
+                    val.tuition = val.tuition ? '是' : '否'
+                    val.lodge = val.lodge ? '是' : '否'
+                    val.league = val.league ? '是' : '否'
+                    val.regulate = val.regulate ? '是' : '否'
+                    val.five = val.five ? '是' : '否'
+                })
+                let dataSource = res.data.data
+
+                exportFile({ columns, dataSource })
+                this.educeLoad = false
             })
         }
     }
@@ -258,19 +311,23 @@ export default {
         <el-descriptions-item label="操作">
             <el-button @click="Add" type="success" :disabled="addLoad">添加</el-button>
         </el-descriptions-item>
+        <el-descriptions-item label="数据导出">
+            <el-button @click="Educe" type="success" v-loading.fullscreen.lock="educeLoad">全部导出</el-button>
+        </el-descriptions-item>
     </el-descriptions>
 </template>
 
 <style scoped>
-
 .el-descriptions__cell .el-input {
     width: 13rem;
     margin-left: 1rem;
 }
+
 :deep(.el-cascader) {
     width: 260px;
 }
-.el-select{
+
+.el-select {
     width: 160px;
 }
 </style>
